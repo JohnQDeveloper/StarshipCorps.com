@@ -6,22 +6,17 @@
     define('BASE_URL', 'https://'.getenv('HOSTNAME'));
     define('NUMBER_OF_MINUTES_PER_RUN', 1); // 1 minute normal gameplay per run
 
-    // Season of Corruption feature flag — set to false to disable the season globally
-    define('CORRUPTION_SEASON_ENABLED', true);
-    // When true, perpetual characters also have access to Corruption Season content
-    define('CORRUPTION_SEASON_PERPETUAL', true);
-    // Monster Harvest / Essence League feature flag — set to false to disable essence drops and crafting
-    define('ESSENCE_LEAGUE_ENABLED', true);
-    // When true, perpetual characters also have access to Essence League content
-    define('ESSENCE_LEAGUE_PERPETUAL', true);
-
     # Determine if running in web context (not CLI/cron)
     define('IS_WEB_CONTEXT', php_sapi_name() !== 'cli');
 
     # Harden Sessions (web container only)
     if (IS_WEB_CONTEXT) {
+        $secureSessionCookie = ENVIRONMENT !== 'Dev'
+            || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (string)($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+
         ini_set('session.cookie_httponly', 1);
-        ini_set('session.cookie_secure', 1); # once its HTTPS
+        ini_set('session.cookie_secure', $secureSessionCookie ? 1 : 0);
         ini_set('session.cookie_samesite', 'Strict');
     }
 
@@ -46,7 +41,7 @@
     # require composer
     require __DIR__ . '/vendor/autoload.php';
 
-    $db = new \PDO('mysql:dbname=MultiverseIdle;host='.getenv('DB_HOST').';charset=utf8mb4', getenv('DB_USER'), getenv('DB_PASSWORD'));
+    $db = new \PDO('mysql:dbname=StarshipCorps;host='.getenv('DB_HOST').';charset=utf8mb4', getenv('DB_USER'), getenv('DB_PASSWORD'));
     $auth = new \Delight\Auth\Auth($db);
 
     $DAL = new DAL($db); // modified to work off the same basis as Delight so 1 connect / 1 request
@@ -55,9 +50,9 @@
     define('RESEND_API_KEY', getenv('RESEND_API_KEY'));
 
     # Func files
-
-
-    # Require data files
+    require_once __DIR__ . '/funcs/i18n.php';
+    require_once __DIR__ . '/funcs/auth.php';
+    require_once __DIR__ . '/funcs/mail.php';
 
 
     # Web container only - session and CSRF handling
@@ -80,9 +75,7 @@
         if (empty($_SESSION['csrf-token'])) {
             $_SESSION['csrf-token'] = bin2hex(random_bytes(32));
         }
-        if ($_SERVER['REQUEST_METHOD'] === 'POST'
-        && 'register' != strtok(strtok($_SERVER["REQUEST_URI"], '?'), '/')
-        && 'login' != strtok(strtok($_SERVER["REQUEST_URI"], '?'), '/')) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf-token']) {
                 die('CSRF token validation failed');
             }

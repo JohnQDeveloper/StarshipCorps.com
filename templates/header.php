@@ -1,3 +1,5 @@
+<?php declare(strict_types=1); ?>
+<?php global $auth; ?>
 <!doctype html>
 <html lang="<?php echo htmlspecialchars(get_language(), ENT_QUOTES, 'UTF-8'); ?>">
   <head>
@@ -8,6 +10,25 @@
     <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@4.0.21/dist/cdn/beer.min.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-colors@1.1.4/dist/cdn/material-dynamic-colors.min.js"></script>
     <link rel="stylesheet" href="./css/custom.css">
-    <title><?php echo t('index.title'); ?> :: <?php echo ENVIRONMENT; ?></title>
+    <title><?php echo t('index.title'); ?> :: <?php echo defined('ENVIRONMENT') ? ENVIRONMENT : 'Dev'; ?></title>
   </head>
   <body>
+    <header class="responsive">
+      <nav>
+        <a class="brand" href="/">
+          <span>Starship Corps</span>
+        </a>
+        <div class="max"></div>
+        <?php if ($auth->isLoggedIn()) { ?>
+          <a class="button border" href="/account">Account</a>
+          <form method="post" action="/logout" class="nav-form">
+            <?php echo csrf_field(); ?>
+            <button type="submit">Log out</button>
+          </form>
+        <?php } else { ?>
+          <a class="button border" href="/login">Log in</a>
+          <a class="button" href="/register">Register</a>
+        <?php } ?>
+      </nav>
+    </header>
+    <main class="responsive auth-shell">

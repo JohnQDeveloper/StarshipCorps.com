@@ -1,0 +1,34 @@
+FROM dunglas/frankenphp:latest
+
+ARG DB_USER
+ARG DB_PASSWORD
+ARG DB_HOST
+ARG RESEND_API_KEY
+ARG RESEND_FROM
+ARG REDIS_HOST
+ARG REDIS_PORT
+
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_HOST=${DB_HOST}
+ENV RESEND_API_KEY=${RESEND_API_KEY}
+ENV RESEND_FROM=${RESEND_FROM}
+ENV REDIS_HOST=${REDIS_HOST}
+ENV REDIS_PORT=${REDIS_PORT}
+
+ENV SERVER_NAME=:80
+
+LABEL maintainer="JohnQDeveloper <public@JohnQDeveloper.com>"
+
+RUN install-php-extensions \
+	pdo_mysql \
+	gd \
+	intl \
+	zip \
+	opcache \
+	redis
+
+RUN apt-get update && apt-get install -y git libnss3-tools
+
+COPY "web_container_files/Caddyfile" "/etc/frankenphp/Caddyfile"
+COPY "web_container_files/php.ini-development" "/usr/local/etc/php/php.ini"

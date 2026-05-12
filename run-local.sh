@@ -30,6 +30,7 @@ docker run --rm -d -v $PWD:/app -p 80:80 -p 443:443 --network starshipcorps-netw
 --env DB_PASSWORD=$DB_PASSWORD \
 --env DB_HOST=$DB_HOST \
 --env RESEND_API_KEY=$RESEND_API_KEY \
+--env RESEND_FROM="$RESEND_FROM" \
 --env REDIS_HOST=valkey \
 --env REDIS_PORT=6379 \
 --env DEBUG=true \
@@ -43,6 +44,7 @@ docker run --rm -d -v $PWD:/app --network starshipcorps-network --tty -it \
 --env DB_PASSWORD=$DB_PASSWORD \
 --env DB_HOST=$DB_HOST \
 --env RESEND_API_KEY=$RESEND_API_KEY \
+--env RESEND_FROM="$RESEND_FROM" \
 --env REDIS_HOST=valkey \
 --env REDIS_PORT=6379 \
 --env DEBUG=true \

@@ -5,9 +5,13 @@ parameters:
         - classes
         - code
         - crons
+        - funcs
         - templates
         - pages
         - public
         - config.php
-        - vendor
+    scanFiles:
+        - funcs/i18n.php
+        - funcs/auth.php
+        - funcs/mail.php
     ignoreErrors:

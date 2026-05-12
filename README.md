@@ -8,6 +8,10 @@ https://resend.com/docs/send-with-php
 
 https://pre-commit.com/
 
+https://www.beercss.com/
+
+https://phpstan.org/user-guide/getting-started
+
 # AI Services
 - OpenAI Codex
 - Claude Code
