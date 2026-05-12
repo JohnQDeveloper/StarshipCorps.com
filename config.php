@@ -1,0 +1,90 @@
+<?php
+    # turn on debug printing
+    define('DEBUG', getenv('DEBUG') === 'true');
+    define('ENVIRONMENT', getenv('ENVIRONMENT')); # Dev / QA / Prod
+    define('URL', 'https://'.getenv('HOSTNAME').'/');
+    define('BASE_URL', 'https://'.getenv('HOSTNAME'));
+    define('NUMBER_OF_MINUTES_PER_RUN', 1); // 1 minute normal gameplay per run
+
+    // Season of Corruption feature flag — set to false to disable the season globally
+    define('CORRUPTION_SEASON_ENABLED', true);
+    // When true, perpetual characters also have access to Corruption Season content
+    define('CORRUPTION_SEASON_PERPETUAL', true);
+    // Monster Harvest / Essence League feature flag — set to false to disable essence drops and crafting
+    define('ESSENCE_LEAGUE_ENABLED', true);
+    // When true, perpetual characters also have access to Essence League content
+    define('ESSENCE_LEAGUE_PERPETUAL', true);
+
+    # Determine if running in web context (not CLI/cron)
+    define('IS_WEB_CONTEXT', php_sapi_name() !== 'cli');
+
+    # Harden Sessions (web container only)
+    if (IS_WEB_CONTEXT) {
+        ini_set('session.cookie_httponly', 1);
+        ini_set('session.cookie_secure', 1); # once its HTTPS
+        ini_set('session.cookie_samesite', 'Strict');
+    }
+
+    # Connect to Redis
+    $redis = new Redis();
+    $redis->connect(getenv('REDIS_HOST'), intval(getenv('REDIS_PORT')));
+
+    if(DEBUG) {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+    } else {
+        ini_set('display_errors', 0);
+        ini_set('display_startup_errors', 0);
+    }
+
+    error_reporting(E_ALL ^ E_DEPRECATED ^ E_WARNING); # otherwise barf on sessions due to headers already being sent
+
+    spl_autoload_register(function ($class_name) {
+        include_once( __DIR__ . "/classes/" . strtolower($class_name) . '.php');
+    });
+
+    # require composer
+    require __DIR__ . '/vendor/autoload.php';
+
+    $db = new \PDO('mysql:dbname=MultiverseIdle;host='.getenv('DB_HOST').';charset=utf8mb4', getenv('DB_USER'), getenv('DB_PASSWORD'));
+    $auth = new \Delight\Auth\Auth($db);
+
+    $DAL = new DAL($db); // modified to work off the same basis as Delight so 1 connect / 1 request
+
+    # RESEND
+    define('RESEND_API_KEY', getenv('RESEND_API_KEY'));
+
+    # Func files
+
+
+    # Require data files
+
+
+    # Web container only - session and CSRF handling
+    if (IS_WEB_CONTEXT) {
+        # i18n
+        init_language();
+
+        # authentication
+        if(isset($_SESSION['auth_logged_in']) && $_SESSION['auth_logged_in'] === 1) {
+            $_SESSION['user_id'] = $_SESSION['auth_user_id'];
+            $_SESSION['email'] = $_SESSION['auth_email'];
+            $_SESSION['username'] = $_SESSION['auth_username'];
+        }
+
+        # Ensure auth_user_id is always a safe int (0 for guests/unauthenticated)
+        # This prevents TypeError in code files that read $_SESSION['auth_user_id'] directly
+        $_SESSION['auth_user_id'] = (int)($_SESSION['auth_user_id'] ?? 0);
+
+        # Minimal CSRF Protection
+        if (empty($_SESSION['csrf-token'])) {
+            $_SESSION['csrf-token'] = bin2hex(random_bytes(32));
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'
+        && 'register' != strtok(strtok($_SERVER["REQUEST_URI"], '?'), '/')
+        && 'login' != strtok(strtok($_SERVER["REQUEST_URI"], '?'), '/')) {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf-token']) {
+                die('CSRF token validation failed');
+            }
+        }
+    }

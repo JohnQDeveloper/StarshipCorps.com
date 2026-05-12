@@ -1,0 +1,13 @@
+parameters:
+    level: 5
+    paths:
+        - data
+        - classes
+        - code
+        - crons
+        - templates
+        - pages
+        - public
+        - config.php
+        - vendor
+    ignoreErrors:
