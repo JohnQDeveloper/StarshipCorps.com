@@ -10,6 +10,11 @@ $rawUri = strtok($_SERVER['REQUEST_URI'], '?') ?: '/';
 $route = trim($rawUri, '/');
 $mainPage = $route === '' ? 'index' : strtolower(basename(explode('/', $route)[0]));
 
+if (in_array($mainPage, ['crons', 'tools'], true)) {
+    http_response_code(404);
+    exit;
+}
+
 if ($auth->isLoggedIn()) {
     $currentAuthStatus = getAuthUserStatusById((int)($_SESSION['auth_user_id'] ?? 0));
 

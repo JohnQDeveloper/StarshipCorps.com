@@ -12,14 +12,17 @@ localhost {
 	# Enable compression (optional)
 	encode zstd br gzip
 
-	# Stop on css/js/img
-	rewrite /css/* /public{uri}
-	rewrite /js/* /public{uri}
-	rewrite /img/* /public{uri}
+	root * /app/public
 
-	# Rewrite everything else
-	rewrite * /public/index.php
+	route {
+		# Keep maintenance scripts out of the web surface.
+		@blockedPrivateDirs path /crons /crons/* /tools /tools/*
+		respond @blockedPrivateDirs 404
 
-	# Execute PHP files in the current directory and serve assets
-	php_server
+		# Serve public files directly and send application routes to the front controller.
+		try_files {path} /index.php
+
+		# Execute PHP files in the current directory and serve assets
+		php_server
+	}
 }
