@@ -213,6 +213,130 @@ button.mobile-menu-trigger {
   margin-block: 0 0.75rem;
 }
 
+.fleet-heading {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  margin-block-end: 1rem;
+}
+
+.fleet-heading h1 {
+  margin: 0;
+}
+
+.fleet-kicker {
+  color: #9fe7ff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+}
+
+.fleet-alert {
+  background: #2a2420;
+  border: 0.0625rem solid #735f25;
+  border-radius: 0.5rem;
+  color: #ffddb4;
+  display: grid;
+  gap: 0.25rem;
+  margin-block-end: 1rem;
+  padding: 0.9rem 1rem;
+}
+
+.fleet-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.fleet-ship-card {
+  background:
+    radial-gradient(circle at 92% 8%, rgba(159, 231, 255, 0.12), transparent 34%),
+    linear-gradient(145deg, #232227, #18171b);
+  border: 0.0625rem solid #4f4a55;
+  border-radius: 0.5rem;
+  box-shadow: inset 0 0 0 0.0625rem rgba(255, 255, 255, 0.03);
+  margin: 0;
+  min-height: 13rem;
+  padding: 1rem;
+}
+
+.fleet-ship-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.fleet-ship-header p {
+  color: #9fe7ff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+
+.fleet-ship-header h2 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.fleet-ship-header i {
+  color: #ffb95c;
+  flex: 0 0 auto;
+  font-size: 2rem;
+}
+
+.fleet-ship-specs {
+  margin-block: 1rem;
+}
+
+.fleet-ship-specs div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.fleet-ship-specs dt {
+  color: #c9c0ca;
+  font-size: 0.75rem;
+}
+
+.fleet-ship-specs dd {
+  font-weight: 700;
+  margin: 0;
+}
+
+.fleet-captain-field {
+  margin-block: 0;
+}
+
+.fleet-actions {
+  display: grid;
+}
+
+.fleet-captain-create {
+  border-block-start: 0.0625rem solid var(--outline-variant);
+  display: grid;
+  gap: 1rem;
+  margin-block-start: 1.5rem;
+  padding-block-start: 1.5rem;
+}
+
+.fleet-captain-create h2 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.fleet-captain-create p:not(.fleet-kicker) {
+  color: #c9c0ca;
+  margin-block: 0.5rem 0;
+}
+
+.fleet-captain-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
 .map-heading {
   align-items: flex-end;
   display: flex;
@@ -398,6 +522,24 @@ button.mobile-menu-trigger {
 
   .game-top-nav .brand span {
     max-width: none;
+  }
+
+  .fleet-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fleet-actions {
+    grid-column: 1 / -1;
+    justify-content: end;
+  }
+
+  .fleet-actions button {
+    min-width: 14rem;
+  }
+
+  .fleet-captain-create {
+    align-items: end;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 26rem);
   }
 }
 

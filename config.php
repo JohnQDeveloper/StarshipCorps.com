@@ -53,6 +53,7 @@
     require_once __DIR__ . '/funcs/i18n.php';
     require_once __DIR__ . '/funcs/auth.php';
     require_once __DIR__ . '/funcs/mail.php';
+    require_once __DIR__ . '/funcs/fleet.php';
 
 
     # Web container only - session and CSRF handling
