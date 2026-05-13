@@ -2,6 +2,8 @@
 
 This file provides guidance to AI Agents when working with code in this repository.
 
+Page design / ui / ux should be mobile first and follow accessibility guidelines.
+
 # Commands
 
 **Run the full stack locally** (Valkey + Web + Cron containers):
@@ -13,6 +15,7 @@ Requires `env.sh` to be sourced with `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `RESEN
 **Static analysis:**
 ```bash
 ./phpstan.sh   # runs vendor/bin/phpstan analyse -c phpstan.neon
+php -l <file name> # checks php syntax
 ```
 
 **Trigger a cron manually** (inside the cron container):

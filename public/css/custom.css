@@ -2,6 +2,23 @@ body {
   min-height: 100vh;
 }
 
+body.game-theme-orange {
+  --primary: #ffb95c;
+  --on-primary: #432b00;
+  --primary-container: #643f00;
+  --on-primary-container: #ffddb4;
+  --secondary: #dcc3a2;
+  --on-secondary: #3f2d16;
+  --secondary-container: #58442a;
+  --on-secondary-container: #f9dfbd;
+  --surface: #141316;
+  --on-surface: #e6e1e6;
+  --surface-container: #201f22;
+  --surface-container-high: #2b292d;
+  --surface-container-highest: #363438;
+  --outline-variant: #51453a;
+}
+
 .auth-shell {
   min-height: calc(100vh - 5rem);
 }
@@ -31,12 +48,169 @@ body {
   gap: 0.75rem;
 }
 
+.account-language-form {
+  margin-block: 1.5rem;
+}
+
+.account-language-form h2 {
+  font-size: 1.25rem;
+  margin-block: 0 0.5rem;
+}
+
 .nav-form {
   display: inline-flex;
 }
 
+.game-top-nav {
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+}
+
+header.responsive {
+  position: relative;
+}
+
+.game-nav-tabs {
+  display: none;
+  margin-block-start: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.game-nav-tabs a {
+  min-width: 5.75rem;
+  text-decoration: none;
+}
+
+button.mobile-menu-trigger {
+  align-items: center;
+  background: transparent !important;
+  block-size: 2.75rem;
+  border: 0.0625rem solid var(--outline-variant) !important;
+  border-radius: 0.375rem !important;
+  box-shadow: none !important;
+  color: var(--on-surface) !important;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  gap: 0;
+  height: 2.75rem;
+  inline-size: 2.75rem;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  min-inline-size: 2.75rem;
+  padding: 0 !important;
+  width: 2.75rem;
+}
+
+.hamburger-icon,
+.hamburger-icon::before,
+.hamburger-icon::after {
+  background: currentColor;
+  border-radius: 999px;
+  display: block;
+  height: 0.125rem;
+  width: 1.25rem;
+}
+
+.hamburger-icon {
+  position: relative;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+  content: "";
+  left: 0;
+  position: absolute;
+}
+
+.hamburger-icon::before {
+  top: -0.375rem;
+}
+
+.hamburger-icon::after {
+  top: 0.375rem;
+}
+
+.mobile-game-menu-content {
+  background: var(--surface);
+  border: 0.0625rem solid var(--outline-variant);
+  border-radius: 0.5rem;
+  box-shadow: var(--elevate2);
+  display: none;
+  gap: 0.25rem;
+  inset-block-start: 3.75rem;
+  inset-inline-end: 1rem;
+  min-width: min(18rem, calc(100vw - 2rem));
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 10;
+}
+
+.mobile-game-menu-content.is-open {
+  display: grid !important;
+}
+
+.mobile-game-menu-content a,
+.mobile-logout-form button {
+  align-items: center;
+  border-radius: 0.375rem;
+  color: inherit;
+  display: flex;
+  gap: 0.75rem;
+  min-height: 3rem;
+  padding-inline: 0.75rem;
+  text-decoration: none;
+}
+
+.mobile-menu-symbol {
+  align-items: center;
+  background: var(--primary-container);
+  border-radius: 0.375rem;
+  color: var(--on-primary-container);
+  display: inline-flex;
+  flex: 0 0 2rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  height: 2rem;
+  justify-content: center;
+  width: 2rem;
+}
+
+.mobile-logout-form {
+  display: block;
+}
+
+.mobile-logout-form button {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  justify-content: flex-start;
+  margin: 0;
+  width: 100%;
+}
+
+.mobile-game-menu-content a.active {
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+}
+
 .auth-link {
   margin-block: 1rem 0;
+}
+
+.desktop-account-link,
+.desktop-logout-form {
+  display: none;
+}
+
+.game-page {
+  padding-block: 2rem;
+}
+
+.game-page h1 {
+  margin-block: 0 0.75rem;
 }
 
 .snackbar.active {
@@ -45,4 +219,35 @@ body {
   margin-block-end: 1rem;
   opacity: 1;
   transform: none;
+}
+
+.game-top-nav .brand span {
+  display: inline-block;
+  max-width: 11rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 48rem) {
+  .game-nav-tabs {
+    display: flex !important;
+  }
+
+  .mobile-menu-trigger,
+  .mobile-game-menu-content {
+    display: none !important;
+  }
+
+  .desktop-account-link {
+    display: inline-flex !important;
+  }
+
+  .desktop-logout-form {
+    display: inline-flex !important;
+  }
+
+  .game-top-nav .brand span {
+    max-width: none;
+  }
 }

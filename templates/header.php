@@ -20,10 +20,10 @@
         </a>
         <div class="max"></div>
         <?php if ($auth->isLoggedIn()) { ?>
-          <a class="button border" href="/account">Account</a>
+          <a class="button border" href="/account"><?php echo e(t('nav.account')); ?></a>
           <form method="post" action="/logout" class="nav-form">
             <?php echo csrf_field(); ?>
-            <button type="submit">Log out</button>
+            <button type="submit"><?php echo e(t('nav.logout')); ?></button>
           </form>
         <?php } else { ?>
           <a class="button border" href="/login">Log in</a>

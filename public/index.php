@@ -53,6 +53,20 @@ $publicPages = [
     'forgot-password',
     'reset-password',
 ];
+
+$gamePages = [
+    'account',
+    'dashboard',
+    'missions',
+    'fleet',
+    'market',
+    'starbase',
+    'comms',
+    'map',
+    'markets',
+    'settings',
+];
+
 $pageFile = __DIR__ . '/../pages/' . $mainPage . '.php';
 $codeFile = __DIR__ . '/../code/' . $mainPage . '.php';
 
@@ -72,6 +86,14 @@ if (file_exists($codeFile)) {
     require_once $codeFile;
 }
 
-require_once('../templates/header.php');
-require_once $pageFile;
-require_once('../templates/footer.php');
+if (!$auth->isLoggedIn() && in_array($mainPage, $publicPages, true)) {
+    require_once('../templates/header.php');
+    require_once $pageFile;
+    require_once('../templates/footer.php');
+    exit;
+} elseif ($auth->isLoggedIn() && in_array($mainPage, $gamePages, true)) {
+    require_once('../templates/game-header.php');
+    require_once $pageFile;
+    require_once('../templates/footer.php');
+    exit;
+}
