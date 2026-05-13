@@ -72,6 +72,8 @@ function t(string $key): string
             'game.nav.map' => 'Map',
             'game.nav.markets' => 'Markets',
             'game.placeholder.body' => 'Systems are coming online for this command station.',
+            'map.region_label' => 'Region',
+            'map.grid_label' => 'HighSec system grid map',
         ],
         'es' => [
             'index.title' => 'Starship Corps',
@@ -93,6 +95,8 @@ function t(string $key): string
             'game.nav.map' => 'Mapa',
             'game.nav.markets' => 'Mercados',
             'game.placeholder.body' => 'Los sistemas se están activando para esta estación de mando.',
+            'map.region_label' => 'Región',
+            'map.grid_label' => 'Mapa de cuadrícula de sistemas HighSec',
         ],
         'pt-br' => [
             'index.title' => 'Starship Corps',
@@ -114,6 +118,8 @@ function t(string $key): string
             'game.nav.map' => 'Mapa',
             'game.nav.markets' => 'Mercados',
             'game.placeholder.body' => 'Os sistemas estão ficando online para esta estação de comando.',
+            'map.region_label' => 'Região',
+            'map.grid_label' => 'Mapa em grade de sistemas HighSec',
         ],
         'zh-cn' => [
             'index.title' => 'Starship Corps',
@@ -135,6 +141,8 @@ function t(string $key): string
             'game.nav.map' => '地图',
             'game.nav.markets' => '市场',
             'game.placeholder.body' => '此指挥站的系统正在上线。',
+            'map.region_label' => '区域',
+            'map.grid_label' => 'HighSec 星系网格地图',
         ],
     ];
 
