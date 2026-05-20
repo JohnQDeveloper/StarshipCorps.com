@@ -6,8 +6,6 @@ $fleetError = '';
 $fleetSuccess = '';
 $fleetUserId = (int)($_SESSION['auth_user_id'] ?? 0);
 
-process_user_fleet_gathering($fleetUserId);
-
 $starbaseState = load_user_starbase($fleetUserId);
 $fleetStarbase = $starbaseState['starbase'];
 $captainState = load_fleet_captains($fleetUserId);
