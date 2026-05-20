@@ -47,4 +47,12 @@ return [
     'fleet.create_captain_button' => '创建舰长',
     'map.region_label' => '区域',
     'map.grid_label' => 'HighSec 星系网格地图',
+    'starbase.kicker' => '轨道指挥',
+    'starbase.status_online' => '在线',
+    'starbase.setup_required_title' => '需要数据库设置',
+    'starbase.setup_required_body' => '创建 starbases 表以存储默认的 HighSec 指挥星际基地。',
+    'starbase.location' => '位置',
+    'starbase.coordinate_separator' => '位于',
+    'starbase.modules' => '星际基地模块',
+    'starbase.tier' => '等级',
 ];

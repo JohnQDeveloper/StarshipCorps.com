@@ -244,6 +244,24 @@ button.mobile-menu-trigger {
   padding: 0.9rem 1rem;
 }
 
+.fleet-setup-panel {
+  background: #2a2420;
+  border: 0.0625rem solid #735f25;
+  border-radius: 0.5rem;
+  color: #ffddb4;
+  margin: 0;
+  padding: 1rem;
+}
+
+.fleet-setup-panel h2 {
+  font-size: 1.15rem;
+  margin: 0 0 0.35rem;
+}
+
+.fleet-setup-panel p {
+  margin: 0;
+}
+
 .fleet-grid {
   display: grid;
   gap: 1rem;
@@ -337,6 +355,109 @@ button.mobile-menu-trigger {
 .fleet-captain-form {
   display: grid;
   gap: 0.75rem;
+}
+
+.starbase-layout {
+  display: grid;
+  gap: 1rem;
+}
+
+.starbase-location-panel {
+  align-items: center;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(255, 185, 92, 0.14), transparent 34%),
+    linear-gradient(145deg, #242326, #18171b);
+  border: 0.0625rem solid #5b5248;
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 1rem;
+}
+
+.starbase-location-icon {
+  align-items: center;
+  background: #33443b;
+  border: 0.0625rem solid #5d7a6a;
+  border-radius: 0.5rem;
+  color: #b9f1d3;
+  display: inline-flex;
+  flex: 0 0 3rem;
+  height: 3rem;
+  justify-content: center;
+  width: 3rem;
+}
+
+.starbase-location-panel p {
+  color: #c9c0ca;
+  font-size: 0.78rem;
+  margin: 0;
+}
+
+.starbase-location-panel h2 {
+  font-size: 1.4rem;
+  margin: 0.15rem 0;
+}
+
+.starbase-location-panel span:last-child {
+  color: #b9f1d3;
+  font-weight: 700;
+}
+
+.starbase-module-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.starbase-module-sidebar {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-block-end: 0.25rem;
+  scrollbar-width: thin;
+}
+
+.starbase-module-link {
+  background: #201f22;
+  border: 0.0625rem solid #4f4a55;
+  border-radius: 0.5rem;
+  color: #e6e1e6;
+  display: grid;
+  flex: 0 0 min(14rem, 72vw);
+  gap: 0.15rem;
+  min-height: 4.25rem;
+  padding: 0.75rem;
+  text-decoration: none;
+}
+
+.starbase-module-link.active {
+  background: #33443b;
+  border-color: #5d7a6a;
+  color: #b9f1d3;
+}
+
+.starbase-module-link span {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.starbase-module-link small {
+  color: #c9c0ca;
+}
+
+.starbase-module-page {
+  background:
+    radial-gradient(circle at 92% 12%, rgba(255, 185, 92, 0.12), transparent 34%),
+    linear-gradient(145deg, #242326, #18171b);
+  border: 0.0625rem solid #5b5248;
+  border-radius: 0.5rem;
+  min-height: 14rem;
+  padding: 1rem;
+}
+
+.starbase-module-page h1 {
+  line-height: 1.1;
+  margin: 0;
 }
 
 .map-heading {
@@ -542,6 +663,22 @@ button.mobile-menu-trigger {
   .fleet-captain-create {
     align-items: end;
     grid-template-columns: minmax(0, 1fr) minmax(20rem, 26rem);
+  }
+
+  .starbase-module-shell {
+    align-items: start;
+    grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
+  }
+
+  .starbase-module-sidebar {
+    display: grid;
+    gap: 0.5rem;
+    overflow: visible;
+    padding-block-end: 0;
+  }
+
+  .starbase-module-link {
+    flex-basis: auto;
   }
 }
 

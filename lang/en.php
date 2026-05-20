@@ -47,4 +47,12 @@ return [
     'fleet.create_captain_button' => 'Create captain',
     'map.region_label' => 'Region',
     'map.grid_label' => 'HighSec system grid map',
+    'starbase.kicker' => 'Orbital command',
+    'starbase.status_online' => 'Online',
+    'starbase.setup_required_title' => 'Database setup required',
+    'starbase.setup_required_body' => 'Create the starbases table to store the default HighSec command starbase.',
+    'starbase.location' => 'Location',
+    'starbase.coordinate_separator' => 'at',
+    'starbase.modules' => 'Starbase modules',
+    'starbase.tier' => 'Tier',
 ];

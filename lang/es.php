@@ -47,4 +47,12 @@ return [
     'fleet.create_captain_button' => 'Crear capitán',
     'map.region_label' => 'Región',
     'map.grid_label' => 'Mapa de cuadrícula de sistemas HighSec',
+    'starbase.kicker' => 'Mando orbital',
+    'starbase.status_online' => 'En línea',
+    'starbase.setup_required_title' => 'Configuración de base de datos requerida',
+    'starbase.setup_required_body' => 'Crea la tabla starbases para guardar la base estelar de mando predeterminada de HighSec.',
+    'starbase.location' => 'Ubicación',
+    'starbase.coordinate_separator' => 'en',
+    'starbase.modules' => 'Módulos de base estelar',
+    'starbase.tier' => 'Nivel',
 ];

@@ -74,7 +74,7 @@ $gameNavigationItems = [
         display: none;
       }
     </style>
-    <link rel="stylesheet" href="./css/custom.css">
+    <link rel="stylesheet" href="/css/custom.css">
     <title><?php echo t('index.title'); ?> :: <?php echo defined('ENVIRONMENT') ? ENVIRONMENT : 'Dev'; ?></title>
   </head>
   <body class="dark game-theme-orange" style="background-color: #141316; color: #e6e1e6;">

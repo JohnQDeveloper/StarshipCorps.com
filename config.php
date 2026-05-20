@@ -54,6 +54,7 @@
     require_once __DIR__ . '/funcs/auth.php';
     require_once __DIR__ . '/funcs/mail.php';
     require_once __DIR__ . '/funcs/fleet.php';
+    require_once __DIR__ . '/funcs/starbase.php';
 
 
     # Web container only - session and CSRF handling
