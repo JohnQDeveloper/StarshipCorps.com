@@ -26,6 +26,7 @@ return [
     'fleet.ship_class' => 'Classe',
     'fleet.weapon' => 'Arma',
     'fleet.mining' => 'Mineração',
+    'fleet.coordinates' => 'Coordenadas atuais',
     'fleet.assign_captain' => 'Capitão designado',
     'fleet.unassigned' => 'Sem designação',
     'fleet.save_assignments' => 'Salvar designações',

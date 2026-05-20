@@ -26,6 +26,7 @@ return [
     'fleet.ship_class' => '舰级',
     'fleet.weapon' => '武器',
     'fleet.mining' => '采矿',
+    'fleet.coordinates' => '当前坐标',
     'fleet.assign_captain' => '已分配舰长',
     'fleet.unassigned' => '未分配',
     'fleet.save_assignments' => '保存分配',

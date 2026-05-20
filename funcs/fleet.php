@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @return array<int, array{id: int, name: string, class: string, callsign: string, design: array{weapon: string, mining: string}}>
+ * @return array<int, array{id: int, name: string, class: string, callsign: string, location: array{system_id: string, system_name: string, x: int, y: int}, design: array{weapon: string, mining: string}}>
  */
 function fleet_ships(): array
 {
@@ -18,21 +18,58 @@ function fleet_ships(): array
 
 /**
  * @param array<int, string> $usedNames
- * @return array{id: int, name: string, class: string, callsign: string, design: array{weapon: string, mining: string}}
+ * @param array{system_id: string, system_name: string, x: int, y: int}|null $location
+ * @return array{id: int, name: string, class: string, callsign: string, location: array{system_id: string, system_name: string, x: int, y: int}, design: array{weapon: string, mining: string}}
  */
-function generated_fleet_ship(int $shipSlot, array $usedNames): array
+function generated_fleet_ship(int $shipSlot, array $usedNames, ?array $location = null): array
 {
     $name = random_fleet_ship_name($usedNames);
+    $location ??= default_fleet_ship_location();
 
     return [
         'id' => $shipSlot,
         'name' => $name,
         'class' => 'Newbie Escort Ship',
         'callsign' => fleet_ship_callsign($name, $shipSlot),
+        'location' => $location,
         'design' => [
             'weapon' => 'Basic Laser',
             'mining' => 'Basic Mining Droid',
         ],
+    ];
+}
+
+/**
+ * @return array{system_id: string, system_name: string, x: int, y: int}
+ */
+function default_fleet_ship_location(): array
+{
+    $system = starter_starbase_system();
+
+    return [
+        'system_id' => $system['id'],
+        'system_name' => $system['name'],
+        'x' => $system['x'],
+        'y' => $system['y'],
+    ];
+}
+
+/**
+ * @param array<string, mixed>|null $starbase
+ * @return array{system_id: string, system_name: string, x: int, y: int}
+ */
+function fleet_ship_location_from_starbase(?array $starbase): array
+{
+    $defaultLocation = default_fleet_ship_location();
+    $system = is_array($starbase['system'] ?? null) ? $starbase['system'] : [];
+    $systemId = trim((string)($system['id'] ?? ''));
+    $systemName = trim((string)($system['name'] ?? ''));
+
+    return [
+        'system_id' => $systemId !== '' ? $systemId : $defaultLocation['system_id'],
+        'system_name' => $systemName !== '' ? $systemName : $defaultLocation['system_name'],
+        'x' => (int)($system['x'] ?? $defaultLocation['x']),
+        'y' => (int)($system['y'] ?? $defaultLocation['y']),
     ];
 }
 
@@ -166,14 +203,16 @@ function default_fleet_assignments(): array
 
 /**
  * @param array<int, array{id: int, name: string}> $captains
- * @return array{available: bool, assignments: array<int, int>, ships: array<int, array{id: int, name: string, class: string, callsign: string, design: array{weapon: string, mining: string}}>}
+ * @param array<string, mixed>|null $starbase
+ * @return array{available: bool, assignments: array<int, int>, ships: array<int, array{id: int, name: string, class: string, callsign: string, location: array{system_id: string, system_name: string, x: int, y: int}, design: array{weapon: string, mining: string}}>}
  */
-function load_fleet_assignments(int $userId, array $captains): array
+function load_fleet_assignments(int $userId, array $captains, ?array $starbase = null): array
 {
     global $DAL;
 
     $assignments = default_fleet_assignments();
     $ships = fleet_ships();
+    $starterLocation = fleet_ship_location_from_starbase($starbase);
 
     if ($userId <= 0) {
         return ['available' => false, 'assignments' => $assignments, 'ships' => $ships];
@@ -209,7 +248,7 @@ function load_fleet_assignments(int $userId, array $captains): array
         $shipData = json_decode($originalShipData, true);
 
         if (is_array($shipData)) {
-            $ships[$shipSlot] = normalize_fleet_ship($shipSlot, $shipData);
+            $ships[$shipSlot] = normalize_fleet_ship($shipSlot, $shipData, $starterLocation);
             $usedNames[] = $ships[$shipSlot]['name'];
 
             if (fleet_ship_data_needs_starter_update($shipData)) {
@@ -223,7 +262,7 @@ function load_fleet_assignments(int $userId, array $captains): array
             continue;
         }
 
-        $ships[$shipSlot] = generated_fleet_ship($shipSlot, $usedNames);
+        $ships[$shipSlot] = generated_fleet_ship($shipSlot, $usedNames, $starterLocation);
         $usedNames[] = $ships[$shipSlot]['name'];
 
         if (!insert_fleet_ship($userId, $shipSlot, $ships[$shipSlot])) {
@@ -236,13 +275,15 @@ function load_fleet_assignments(int $userId, array $captains): array
 
 /**
  * @param array<string, mixed> $shipData
- * @return array{id: int, name: string, class: string, callsign: string, design: array{weapon: string, mining: string}}
+ * @param array{system_id: string, system_name: string, x: int, y: int}|null $defaultLocation
+ * @return array{id: int, name: string, class: string, callsign: string, location: array{system_id: string, system_name: string, x: int, y: int}, design: array{weapon: string, mining: string}}
  */
-function normalize_fleet_ship(int $shipSlot, array $shipData): array
+function normalize_fleet_ship(int $shipSlot, array $shipData, ?array $defaultLocation = null): array
 {
-    $ship = generated_fleet_ship($shipSlot, []);
+    $ship = generated_fleet_ship($shipSlot, [], $defaultLocation);
     $name = trim((string)($shipData['name'] ?? ''));
     $callsign = trim((string)($shipData['callsign'] ?? ''));
+    $location = normalize_fleet_ship_location($shipData['location'] ?? null, $ship['location']);
 
     if ($name !== '' && strlen($name) <= 80) {
         $ship['name'] = $name;
@@ -252,7 +293,34 @@ function normalize_fleet_ship(int $shipSlot, array $shipData): array
         $ship['callsign'] = $callsign;
     }
 
+    $ship['location'] = $location;
+
     return $ship;
+}
+
+/**
+ * @param array{system_id: string, system_name: string, x: int, y: int} $defaultLocation
+ * @return array{system_id: string, system_name: string, x: int, y: int}
+ */
+function normalize_fleet_ship_location(mixed $location, array $defaultLocation): array
+{
+    if (!is_array($location)) {
+        return $defaultLocation;
+    }
+
+    $systemId = trim((string)($location['system_id'] ?? ''));
+    $systemName = trim((string)($location['system_name'] ?? ''));
+
+    if ($systemId === '' || $systemName === '') {
+        return $defaultLocation;
+    }
+
+    return [
+        'system_id' => strlen($systemId) <= 40 ? $systemId : $defaultLocation['system_id'],
+        'system_name' => strlen($systemName) <= 80 ? $systemName : $defaultLocation['system_name'],
+        'x' => (int)($location['x'] ?? $defaultLocation['x']),
+        'y' => (int)($location['y'] ?? $defaultLocation['y']),
+    ];
 }
 
 /**
@@ -263,6 +331,7 @@ function fleet_ship_data_needs_starter_update(array $shipData): bool
     $name = trim((string)($shipData['name'] ?? ''));
     $callsign = trim((string)($shipData['callsign'] ?? ''));
     $design = $shipData['design'] ?? [];
+    $location = $shipData['location'] ?? null;
 
     if ($name === '' || strlen($name) > 80 || $callsign === '' || strlen($callsign) > 20) {
         return true;
@@ -276,12 +345,21 @@ function fleet_ship_data_needs_starter_update(array $shipData): bool
         return true;
     }
 
+    if (!is_array($location)
+        || trim((string)($location['system_id'] ?? '')) === ''
+        || trim((string)($location['system_name'] ?? '')) === ''
+        || !array_key_exists('x', $location)
+        || !array_key_exists('y', $location)
+    ) {
+        return true;
+    }
+
     return trim((string)($design['weapon'] ?? '')) !== 'Basic Laser'
         || trim((string)($design['mining'] ?? '')) !== 'Basic Mining Droid';
 }
 
 /**
- * @param array{id: int, name: string, class: string, callsign: string, design: array{weapon: string, mining: string}} $ship
+ * @param array{id: int, name: string, class: string, callsign: string, location: array{system_id: string, system_name: string, x: int, y: int}, design: array{weapon: string, mining: string}} $ship
  */
 function insert_fleet_ship(int $userId, int $shipSlot, array $ship): bool
 {
@@ -302,7 +380,7 @@ function insert_fleet_ship(int $userId, int $shipSlot, array $ship): bool
 }
 
 /**
- * @param array{id: int, name: string, class: string, callsign: string, design: array{weapon: string, mining: string}} $ship
+ * @param array{id: int, name: string, class: string, callsign: string, location: array{system_id: string, system_name: string, x: int, y: int}, design: array{weapon: string, mining: string}} $ship
  */
 function save_fleet_ship_data(int $userId, int $shipSlot, array $ship): bool
 {
@@ -323,7 +401,7 @@ function save_fleet_ship_data(int $userId, int $shipSlot, array $ship): bool
 
 /**
  * @param array<int, int> $assignments
- * @param array<int, array{id: int, name: string, class: string, callsign: string, design: array{weapon: string, mining: string}}>|null $ships
+ * @param array<int, array{id: int, name: string, class: string, callsign: string, location: array{system_id: string, system_name: string, x: int, y: int}, design: array{weapon: string, mining: string}}>|null $ships
  */
 function save_fleet_assignments(int $userId, array $assignments, ?array $ships = null): bool
 {

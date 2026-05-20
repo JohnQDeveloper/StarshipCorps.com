@@ -39,7 +39,10 @@ $canCreateCaptain = $captainPersistenceAvailable && count($fleetCaptains) < 4;
     <input type="hidden" name="fleet_action" value="save_assignments">
 
     <?php foreach ($fleetShips as $shipSlot => $ship) { ?>
-      <?php $assignedCaptain = (int)($fleetAssignments[$shipSlot] ?? 0); ?>
+      <?php
+        $assignedCaptain = (int)($fleetAssignments[$shipSlot] ?? 0);
+        $shipLocation = is_array($ship['location'] ?? null) ? $ship['location'] : default_fleet_ship_location();
+      ?>
       <article class="fleet-ship-card">
         <div class="fleet-ship-header">
           <div>
@@ -61,6 +64,15 @@ $canCreateCaptain = $captainPersistenceAvailable && count($fleetCaptains) < 4;
           <div>
             <dt><?php echo e(t('fleet.mining')); ?></dt>
             <dd><?php echo e($ship['design']['mining']); ?></dd>
+          </div>
+          <div>
+            <dt><?php echo e(t('fleet.coordinates')); ?></dt>
+            <dd>
+              <?php echo e((string)($shipLocation['system_id'] ?? '')); ?>
+              <?php echo e(t('starbase.coordinate_separator')); ?>
+              <?php echo e((string)($shipLocation['x'] ?? 0)); ?>,
+              <?php echo e((string)($shipLocation['y'] ?? 0)); ?>
+            </dd>
           </div>
         </dl>
 
