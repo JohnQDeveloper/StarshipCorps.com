@@ -74,7 +74,22 @@ function default_starbase_data(): array
         'security' => 'HighSec',
         'system' => $system,
         'modules' => starter_starbase_modules(),
+        'resource_storage' => default_starbase_resource_storage(),
     ];
+}
+
+/**
+ * @return array<string, int>
+ */
+function default_starbase_resource_storage(): array
+{
+    $storage = [];
+
+    foreach (starter_starbase_resource_types() as $resourceType => $resourceLabel) {
+        $storage[$resourceType] = 0;
+    }
+
+    return $storage;
 }
 
 /**
@@ -205,8 +220,27 @@ function normalize_starbase_data(array $starbaseData): array
     $starbaseData['security'] = 'HighSec';
     $starbaseData['system'] = $defaultStarbase['system'];
     $starbaseData['modules'] = normalize_starbase_modules($starbaseData['modules'] ?? []);
+    $starbaseData['resource_storage'] = normalize_starbase_resource_storage($starbaseData['resource_storage'] ?? []);
 
     return $starbaseData;
+}
+
+/**
+ * @return array<string, int>
+ */
+function normalize_starbase_resource_storage(mixed $resourceStorage): array
+{
+    $normalizedStorage = default_starbase_resource_storage();
+
+    if (!is_array($resourceStorage)) {
+        return $normalizedStorage;
+    }
+
+    foreach ($normalizedStorage as $resourceType => $storedAmount) {
+        $normalizedStorage[$resourceType] = max(0, (int)($resourceStorage[$resourceType] ?? $storedAmount));
+    }
+
+    return $normalizedStorage;
 }
 
 /**
@@ -287,6 +321,27 @@ function save_user_starbase(int $userId, int $starbaseId, array $starbaseData): 
         [
             ':user_id' => $userId,
             ':starbase_id' => $starbaseId,
+            ':starbase_data' => $encodedStarbaseData,
+        ]
+    );
+}
+
+/**
+ * @param array<string, mixed> $starbaseData
+ */
+function save_user_starbase_by_user_id(int $userId, array $starbaseData): bool
+{
+    global $DAL;
+
+    $encodedStarbaseData = json_encode($starbaseData, JSON_THROW_ON_ERROR);
+
+    return $DAL->w(
+        'UPDATE starbases SET starbase_data=:starbase_data, updated_at=NOW()
+            WHERE user_id=:user_id
+            ORDER BY starbase_id
+            LIMIT 1',
+        [
+            ':user_id' => $userId,
             ':starbase_data' => $encodedStarbaseData,
         ]
     );

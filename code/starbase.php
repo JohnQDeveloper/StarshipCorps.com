@@ -3,6 +3,9 @@
 declare(strict_types=1);
 
 $starbaseUserId = (int)($_SESSION['auth_user_id'] ?? 0);
+
+process_user_fleet_gathering($starbaseUserId);
+
 $starbaseState = load_user_starbase($starbaseUserId);
 $starbasePersistenceAvailable = $starbaseState['available'];
 $starbase = $starbaseState['starbase'];

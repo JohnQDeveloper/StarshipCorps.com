@@ -102,20 +102,6 @@ $captainedFleetShips = captained_fleet_ships($fleetShips, $fleetAssignments);
               <label for="route-system"><?php echo e(t('fleet.route_sector')); ?></label>
             </div>
 
-            <div class="field border label">
-              <select id="route-resource" name="resource" <?php echo !$fleetFormsAvailable || $captainedFleetShips === [] ? 'disabled' : ''; ?>>
-                <?php foreach ($fleetRouteSystems as $system) { ?>
-                  <?php foreach ($system['resources'] as $resourceKey => $resource) { ?>
-                    <option value="<?php echo e($resourceKey); ?>">
-                      <?php echo e($resource['label']); ?>
-                    </option>
-                  <?php } ?>
-                  <?php break; ?>
-                <?php } ?>
-              </select>
-              <label for="route-resource"><?php echo e(t('fleet.route_resource')); ?></label>
-            </div>
-
             <button type="submit" class="responsive" <?php echo !$fleetFormsAvailable || $captainedFleetShips === [] ? 'disabled' : ''; ?>>
               <?php echo e(t('fleet.assign_route_button')); ?>
             </button>
@@ -127,6 +113,8 @@ $captainedFleetShips = captained_fleet_ships($fleetShips, $fleetAssignments);
                 $assignedCaptain = (int)($fleetAssignments[$shipSlot] ?? 0);
                 $captainName = (string)($fleetCaptains[$assignedCaptain]['name'] ?? '');
                 $route = is_array($ship['route'] ?? null) ? $ship['route'] : null;
+                $cargo = is_array($ship['cargo'] ?? null) ? $ship['cargo'] : [];
+                $totalCargo = array_sum(array_map('intval', $cargo));
               ?>
               <article class="fleet-route-card">
                 <div>
@@ -147,8 +135,14 @@ $captainedFleetShips = captained_fleet_ships($fleetShips, $fleetAssignments);
                       </dd>
                     </div>
                     <div>
-                      <dt><?php echo e(t('fleet.route_resource')); ?></dt>
-                      <dd><?php echo e((string)$route['resource_label']); ?></dd>
+                      <dt><?php echo e(t('fleet.gathering_status')); ?></dt>
+                      <dd>
+                        <?php echo e((string)t((string)($route['state'] ?? '') === 'returning' ? 'fleet.gathering_returning' : 'fleet.gathering_active')); ?>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt><?php echo e(t('fleet.cargo')); ?></dt>
+                      <dd><?php echo e((string)$totalCargo); ?> / 10000</dd>
                     </div>
                   </dl>
                 <?php } ?>
@@ -262,37 +256,4 @@ $captainedFleetShips = captained_fleet_ships($fleetShips, $fleetAssignments);
     </div>
   </div>
 
-  <?php if ($fleetRoutePage) { ?>
-    <script>
-      (() => {
-        const systems = <?php echo json_encode($fleetRouteSystems, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
-        const systemSelect = document.querySelector('#route-system');
-        const resourceSelect = document.querySelector('#route-resource');
-
-        if (!systemSelect || !resourceSelect) {
-          return;
-        }
-
-        const renderResources = () => {
-          const system = systems[systemSelect.value];
-
-          resourceSelect.textContent = '';
-
-          if (!system || !system.resources) {
-            return;
-          }
-
-          Object.entries(system.resources).forEach(([resourceKey, resource]) => {
-            const option = document.createElement('option');
-            option.value = resourceKey;
-            option.textContent = `${resource.label} (${resource.abundance}%)`;
-            resourceSelect.append(option);
-          });
-        };
-
-        systemSelect.addEventListener('change', renderResources);
-        renderResources();
-      })();
-    </script>
-  <?php } ?>
 </section>

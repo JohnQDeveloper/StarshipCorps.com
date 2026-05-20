@@ -15,4 +15,6 @@ parameters:
         - funcs/i18n.php
         - funcs/auth.php
         - funcs/mail.php
+    parallel:
+        maximumNumberOfProcesses: 1
     ignoreErrors:

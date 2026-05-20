@@ -9,6 +9,10 @@ declare(strict_types=1);
  * @var array<string, mixed>|null $starbaseSelectedModule
  */
 $starbaseSystem = is_array($starbase) && is_array($starbase['system'] ?? null) ? $starbase['system'] : [];
+$starbaseResourceStorage = is_array($starbase) && is_array($starbase['resource_storage'] ?? null)
+    ? $starbase['resource_storage']
+    : [];
+$starbaseResourceLabels = starter_starbase_resource_types();
 ?>
 
 <section class="game-page">
@@ -34,6 +38,22 @@ $starbaseSystem = is_array($starbase) && is_array($starbase['system'] ?? null) ?
           </span>
         </div>
       </article>
+
+      <section class="starbase-storage-panel" aria-labelledby="starbase-storage-heading">
+        <div>
+          <p class="map-kicker"><?php echo e(t('starbase.storage_kicker')); ?></p>
+          <h2 id="starbase-storage-heading"><?php echo e(t('starbase.resource_storage')); ?></h2>
+          <span><?php echo e(t('starbase.storage_unlimited')); ?></span>
+        </div>
+        <dl>
+          <?php foreach ($starbaseResourceLabels as $resourceType => $resourceLabel) { ?>
+            <div>
+              <dt><?php echo e($resourceLabel); ?></dt>
+              <dd><?php echo e((string)((int)($starbaseResourceStorage[$resourceType] ?? 0))); ?></dd>
+            </div>
+          <?php } ?>
+        </dl>
+      </section>
 
       <div class="starbase-module-shell">
         <aside class="starbase-module-sidebar" aria-label="<?php echo e(t('starbase.modules')); ?>">

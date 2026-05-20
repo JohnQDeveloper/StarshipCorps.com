@@ -5,6 +5,9 @@ declare(strict_types=1);
 $fleetError = '';
 $fleetSuccess = '';
 $fleetUserId = (int)($_SESSION['auth_user_id'] ?? 0);
+
+process_user_fleet_gathering($fleetUserId);
+
 $starbaseState = load_user_starbase($fleetUserId);
 $fleetStarbase = $starbaseState['starbase'];
 $captainState = load_fleet_captains($fleetUserId);
@@ -84,7 +87,7 @@ if ($fleetAction === 'assign_gathering') {
 
     $shipSlot = $fleetRouteAssignment['ship_slot'];
     $system = $fleetRouteSystems[$fleetRouteAssignment['system_id']];
-    $ship = fleet_ship_with_route($fleetShips[$shipSlot], $system, $fleetRouteAssignment['resource']);
+    $ship = fleet_ship_with_route($fleetShips[$shipSlot], $system);
 
     if (!save_fleet_ship_data($fleetUserId, $shipSlot, $ship)) {
         $fleetError = t('fleet.route_save_failed');

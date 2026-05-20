@@ -1,2 +1,2 @@
 #!/bin/bash
-vendor/bin/phpstan analyse -c phpstan.neon
+vendor/bin/phpstan analyse -c phpstan.neon --no-progress
