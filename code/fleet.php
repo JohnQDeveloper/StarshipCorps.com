@@ -14,9 +14,21 @@ $captainPersistenceAvailable = $captainState['available'];
 $fleetPersistenceAvailable = $fleetState['available'];
 $fleetAssignments = $fleetState['assignments'];
 $fleetShips = $fleetState['ships'];
+$fleetRouteSystems = fleet_route_systems();
+$fleetRoutePage = false;
+$rawRoute = strtok($_SERVER['REQUEST_URI'], '?') ?: '/';
+$routeParts = array_values(array_filter(explode('/', trim($rawRoute, '/'))));
+
+if (($routeParts[1] ?? '') === 'assign-gathering') {
+    $fleetRoutePage = true;
+}
 
 if (query_string('updated', 32) === 'fleet') {
     $fleetSuccess = t('fleet.saved');
+}
+
+if (query_string('updated', 32) === 'route') {
+    $fleetSuccess = t('fleet.route_saved');
 }
 
 if (query_string('created', 32) === 'captain') {
@@ -53,6 +65,33 @@ if ($fleetAction === 'create_captain') {
     }
 
     redirect_to('/fleet?created=captain');
+}
+
+$fleetRouteAssignment = null;
+
+if ($fleetAction === 'assign_gathering') {
+    if (!$fleetPersistenceAvailable || !$captainPersistenceAvailable) {
+        $fleetError = t('fleet.persistence_unavailable');
+        return;
+    }
+
+    $fleetRouteAssignment = posted_fleet_route_assignment($fleetShips, $fleetAssignments, $fleetRouteSystems);
+
+    if ($fleetRouteAssignment === null) {
+        $fleetError = t('fleet.route_invalid');
+        return;
+    }
+
+    $shipSlot = $fleetRouteAssignment['ship_slot'];
+    $system = $fleetRouteSystems[$fleetRouteAssignment['system_id']];
+    $ship = fleet_ship_with_route($fleetShips[$shipSlot], $system, $fleetRouteAssignment['resource']);
+
+    if (!save_fleet_ship_data($fleetUserId, $shipSlot, $ship)) {
+        $fleetError = t('fleet.route_save_failed');
+        return;
+    }
+
+    redirect_to('/fleet/assign-gathering?updated=route');
 }
 
 if (!$fleetPersistenceAvailable || !$captainPersistenceAvailable) {
