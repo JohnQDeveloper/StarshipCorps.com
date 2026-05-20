@@ -72,6 +72,10 @@ $gamePages = [
     'settings',
 ];
 
+if ($auth->isLoggedIn() && in_array($mainPage, $publicPages, true)) {
+    $mainPage = 'account';
+}
+
 $pageFile = __DIR__ . '/../pages/' . $mainPage . '.php';
 $codeFile = __DIR__ . '/../code/' . $mainPage . '.php';
 
