@@ -6,6 +6,7 @@ parameters:
         - code
         - crons
         - funcs
+        - lang
         - templates
         - pages
         - public

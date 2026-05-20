@@ -28,7 +28,7 @@ docker exec starshipcorps-cron php /app/crons/arena.php   # individual cron
 
 ### Language
 
-- func/i18n.php is the core file for all print text
+- funcs/i18n.php is the core file for all print text
 - lang/en.php is the core file for English
 - lang/es.php is the core file for Spanish
 - lang/pt-br.php is the core file for Brazilian Portuguese
@@ -88,7 +88,7 @@ $DAL->last_insert_id();  // after INSERT
 - Views go into `pages/`
 - Code for views (i.e. controllers) go into `code/` with the same file name as the matching view
 - `classes/` are a mixture of models and tooling and should always be lower case
-- `func/` contains common functions that are one-off tools to maintain DRY
+- `funcs/` contains common functions that are one-off tools to maintain DRY
 
 ### Code Style for Javascript
 - Use vanilla javascript, do not import modules or libraries
