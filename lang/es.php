@@ -24,6 +24,8 @@ return [
     'game.placeholder.body' => 'Los sistemas se están activando para esta estación de mando.',
     'fleet.kicker' => 'Lista de mando',
     'fleet.ship_class' => 'Clase',
+    'fleet.weapon' => 'Arma',
+    'fleet.mining' => 'Minería',
     'fleet.assign_captain' => 'Capitán asignado',
     'fleet.unassigned' => 'Sin asignar',
     'fleet.save_assignments' => 'Guardar asignaciones',

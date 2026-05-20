@@ -5,7 +5,7 @@ $fleetSuccess = (string)($fleetSuccess ?? '');
 $fleetAssignments = is_array($fleetAssignments ?? null) ? $fleetAssignments : default_fleet_assignments();
 $fleetPersistenceAvailable = (bool)($fleetPersistenceAvailable ?? false);
 $captainPersistenceAvailable = (bool)($captainPersistenceAvailable ?? false);
-$fleetShips = fleet_ships();
+$fleetShips = is_array($fleetShips ?? null) ? $fleetShips : fleet_ships();
 $fleetCaptains = is_array($fleetCaptains ?? null) ? $fleetCaptains : [];
 $fleetFormsAvailable = $fleetPersistenceAvailable && $captainPersistenceAvailable;
 $canCreateCaptain = $captainPersistenceAvailable && count($fleetCaptains) < 4;
@@ -53,6 +53,14 @@ $canCreateCaptain = $captainPersistenceAvailable && count($fleetCaptains) < 4;
           <div>
             <dt><?php echo e(t('fleet.ship_class')); ?></dt>
             <dd><?php echo e($ship['class']); ?></dd>
+          </div>
+          <div>
+            <dt><?php echo e(t('fleet.weapon')); ?></dt>
+            <dd><?php echo e($ship['design']['weapon']); ?></dd>
+          </div>
+          <div>
+            <dt><?php echo e(t('fleet.mining')); ?></dt>
+            <dd><?php echo e($ship['design']['mining']); ?></dd>
           </div>
         </dl>
 

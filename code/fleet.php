@@ -11,6 +11,7 @@ $fleetState = load_fleet_assignments($fleetUserId, $fleetCaptains);
 $captainPersistenceAvailable = $captainState['available'];
 $fleetPersistenceAvailable = $fleetState['available'];
 $fleetAssignments = $fleetState['assignments'];
+$fleetShips = $fleetState['ships'];
 
 if (query_string('updated', 32) === 'fleet') {
     $fleetSuccess = t('fleet.saved');
@@ -64,7 +65,7 @@ if ($postedAssignments === null) {
     return;
 }
 
-if (!save_fleet_assignments($fleetUserId, $postedAssignments)) {
+if (!save_fleet_assignments($fleetUserId, $postedAssignments, $fleetShips)) {
     $fleetError = t('fleet.save_failed');
     return;
 }

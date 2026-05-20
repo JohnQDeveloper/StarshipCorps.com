@@ -24,6 +24,8 @@ return [
     'game.placeholder.body' => 'Os sistemas estão ficando online para esta estação de comando.',
     'fleet.kicker' => 'Escala de comando',
     'fleet.ship_class' => 'Classe',
+    'fleet.weapon' => 'Arma',
+    'fleet.mining' => 'Mineração',
     'fleet.assign_captain' => 'Capitão designado',
     'fleet.unassigned' => 'Sem designação',
     'fleet.save_assignments' => 'Salvar designações',

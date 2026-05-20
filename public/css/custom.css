@@ -288,6 +288,8 @@ button.mobile-menu-trigger {
 }
 
 .fleet-ship-specs {
+  display: grid;
+  gap: 0.65rem;
   margin-block: 1rem;
 }
 
